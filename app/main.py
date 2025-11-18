@@ -5,7 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.utils.jwt_bearer import get_current_user
 from fastapi import Depends
 
+# Ativar venv: .\venv\Scripts\activate
 # Rodar: uvicorn app.main:app --reload
+# Desativar venv: .\venv\Scripts\deactivate
 
 app = FastAPI(title="Meu Backend")
 
