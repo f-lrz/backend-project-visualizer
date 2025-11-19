@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.infra.sqlalchemy.config.database import Base, engine
-from app.router import login_route
+from app.router import login_route, empresa_routes
 from fastapi.middleware.cors import CORSMiddleware
 from app.utils.jwt_bearer import get_current_user
 from fastapi import Depends
@@ -26,6 +26,7 @@ app.add_middleware(
 
 # Inclui as rotas
 app.include_router(login_route.router)
+app.include_router(empresa_routes.router)
 
 
 
