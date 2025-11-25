@@ -13,8 +13,8 @@ def criar_aluno(db: Session, aluno: schemas.AlunoCreate):
             detail="Email já cadastrado."
         )
 
-    # 2. Cria o Usuario (com senha padrão hashada, ex: '123mudar' ou gerada)
-    senha_padrao = "123mudar" # Você pode mudar lógica de senha aqui
+    # 2. Cria o Usuario
+    senha_padrao = "123mudar" 
     senha_hash = hash_senha(senha_padrao)
 
     db_usuario = models.Usuario(
@@ -27,11 +27,9 @@ def criar_aluno(db: Session, aluno: schemas.AlunoCreate):
     db.commit()
     db.refresh(db_usuario)
 
-    # 3. Cria o registro na tabela Aluno vinculado ao Usuario
-    # Verifica se RA já existe
+    # 3. Cria o registro na tabela Aluno
     aluno_existente = db.query(models.Aluno).filter(models.Aluno.ra == aluno.ra).first()
     if aluno_existente:
-         # Rollback manual se falhar aqui é boa prática, mas para MVP ok
          raise HTTPException(status_code=400, detail="RA já cadastrado.")
 
     db_aluno = models.Aluno(
@@ -43,8 +41,27 @@ def criar_aluno(db: Session, aluno: schemas.AlunoCreate):
     db.commit()
     db.refresh(db_aluno)
 
-    return db_aluno
+    return {
+        "id_usuario": db_usuario.id_usuario,
+        "nome": db_usuario.nome,
+        "email": db_usuario.email,
+        "telefone": db_usuario.telefone,
+        "ra": db_aluno.ra,
+        "curso": db_aluno.curso
+    }
 
 def listar_alunos(db: Session):
-    # Retorna todos os alunos (fazendo join com usuario para pegar o nome)
-    return db.query(models.Aluno).all()
+    alunos_db = db.query(models.Aluno).all()
+    
+    resultados = []
+    for al in alunos_db:
+        resultados.append({
+            "id_usuario": al.usuario.id_usuario,
+            "nome": al.usuario.nome,
+            "email": al.usuario.email,
+            "telefone": al.usuario.telefone,
+            "ra": al.ra,
+            "curso": al.curso
+        })
+        
+    return resultados
