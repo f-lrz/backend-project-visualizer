@@ -6,6 +6,13 @@ from app.infra.sqlalchemy.repositorios.projeto import RepositorioProjeto
 from app.utils.jwt_bearer import get_current_user
 from app.utils.role_checker import role_required
 from app.infra.sqlalchemy.models import models
+from datetime import datetime # Certifique-se de importar datetime
+
+def get_current_semester():
+    now = datetime.now()
+    year = now.year
+    month = now.month
+    return int(f"{year}{1 if 1 <= month <= 6 else 2}")
 
 
 router = APIRouter(prefix="/projetos",
