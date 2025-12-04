@@ -6,7 +6,7 @@ from app.infra.sqlalchemy.repositorios.projeto import RepositorioProjeto
 from app.utils.jwt_bearer import get_current_user
 from app.utils.role_checker import role_required
 from app.infra.sqlalchemy.models import models
-from datetime import datetime # Certifique-se de importar datetime
+from datetime import datetime
 
 def get_current_semester():
     now = datetime.now()
@@ -105,7 +105,7 @@ def get_projetos_dashboard(db: Session = Depends(get_db)):
     repo = RepositorioProjeto(db)
     return repo.listar_projetos_dashboard()
 
-@router.get("/{projeto_id}/dashboard-details",
+@router.get("/dashboard/{projeto_id}",
             response_model=schemas.ProjetoDashboardDetailsResponse,
             status_code=status.HTTP_200_OK,
             summary="Busca detalhes de um projeto para o dashboard",
