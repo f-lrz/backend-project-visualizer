@@ -65,36 +65,7 @@ class EmpresaUpdate(BaseModel):
     nome: Optional[str] = None
     cnpj: Optional[str] = None
     descricao: Optional[str] = None
-
-
-## Cliente Representante ###
-
-class ClienteRepresentanteCreate(BaseModel):
-    nome: str
-    email: str
-    telefone: str
-    id_empresa: int
-
-    class Config:
-        from_attributes = True
-
-class ClienteRepresentanteResponse(BaseModel):
-    id_usuario: int
-    nome: str
-    email: str
-    telefone: str
-    id_empresa: int
-    nome_empresa: str
-
-    class Config:
-        from_attributes = True
-
-class ClienteRepresentanteUpdate(BaseModel):
-    nome: Optional[str] = None
-    email: Optional[str] = None
-    telefone: Optional[str] = None
-    id_empresa: Optional[int] = None
-
+    
 
 ## Orientador ##
 
@@ -138,7 +109,10 @@ class ProjetoCreate(BaseModel):
     data_ini: Optional[date] = None
     data_fim: Optional[date] = None
     status: StatusProjeto
-    id_cliente_representante: int
+    id_empresa: int
+    
+    id_alunos_participantes: List[int]
+    nome_orientador: Optional[str] = None
 
 class ProjetoUpdate(BaseModel):
     nome: Optional[str] = None
@@ -147,6 +121,7 @@ class ProjetoUpdate(BaseModel):
     data_fim: Optional[date] = None
     status: Optional[StatusProjeto] = None
     id_cliente_representante: Optional[int] = None
+    nome_orientador: Optional[str] = None
 
 class ProjetoResponse(BaseModel):
     id_projeto: int
@@ -155,7 +130,8 @@ class ProjetoResponse(BaseModel):
     data_ini: Optional[date] = None
     data_fim: Optional[date] = None
     status: str
-    id_cliente_representante: int
+    id_empresa: int
+    nome_orientador: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -193,7 +169,6 @@ class ProjetoDashboardMemberResponse(BaseModel):
     email: str
     telefone: Optional[str] = None
     curso: Optional[str] = None
-    feedback: Optional[int] = None
     is_lider: bool = False
 
     class Config:
