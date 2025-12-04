@@ -24,7 +24,8 @@ class Empresa(Base):
     cnpj = Column(String(255), nullable=False)
     descricao = Column(String(455), nullable=False)
 
-    clientes_representantes = relationship("Cliente_Representante", back_populates="empresa", cascade="all, delete-orphan")
+    projetos = relationship("Projeto", back_populates="empresa")
+    clientes_representantes = relationship("Cliente_Representante", back_populates="empresa")
 
 class Aluno(Base):
     __tablename__ = "aluno"
@@ -44,7 +45,10 @@ class Projeto(Base):
     data_ini = Column(Date)
     data_fim = Column(Date)
     status = Column(Enum('Ativo', 'Concluído', 'Cancelado'), nullable=False)
-    id_cliente_representante = Column(Integer, ForeignKey("usuario.id_usuario"))
+    nome_orientador = Column(String(255))
+    id_empresa = Column(Integer, ForeignKey("empresa.id_empresa"))
+
+    empresa = relationship("Empresa", back_populates="projetos")
 
 class Cliente_Representante(Base):
     __tablename__ = "cliente_representante"
