@@ -95,8 +95,6 @@ class RepositorioProjeto():
 
         # 2. Aliases para joins múltiplos na tabela Usuario
         AlunoLider = aliased(models.Usuario)
-        ClienteRepUsuario = aliased(models.Usuario)
-
 
         # 4. Subquery para buscar o Aluno Líder do semestre atual
         sq_lider = select(
