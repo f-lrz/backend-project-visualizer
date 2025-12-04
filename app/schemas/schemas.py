@@ -120,7 +120,6 @@ class ProjetoUpdate(BaseModel):
     data_ini: Optional[date] = None
     data_fim: Optional[date] = None
     status: Optional[StatusProjeto] = None
-    id_cliente_representante: Optional[int] = None
     nome_orientador: Optional[str] = None
 
 class ProjetoResponse(BaseModel):

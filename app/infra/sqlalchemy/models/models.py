@@ -12,7 +12,6 @@ class Usuario(Base):
     senha_hash = Column(String(255), nullable=False)
     
     aluno = relationship("Aluno", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
-    cliente_representantes = relationship("Cliente_Representante", back_populates="usuario", cascade="all, delete-orphan")
     orientadores = relationship("Orientador", back_populates="usuario", cascade="all, delete-orphan")
 
 
@@ -25,7 +24,6 @@ class Empresa(Base):
     descricao = Column(String(455), nullable=False)
 
     projetos = relationship("Projeto", back_populates="empresa")
-    clientes_representantes = relationship("Cliente_Representante", back_populates="empresa")
 
 class Aluno(Base):
     __tablename__ = "aluno"
@@ -49,15 +47,6 @@ class Projeto(Base):
     id_empresa = Column(Integer, ForeignKey("empresa.id_empresa"))
 
     empresa = relationship("Empresa", back_populates="projetos")
-
-class Cliente_Representante(Base):
-    __tablename__ = "cliente_representante"
-
-    id_usuario = Column(Integer, ForeignKey("usuario.id_usuario"), primary_key=True)
-    id_empresa = Column(Integer, ForeignKey("empresa.id_empresa"), primary_key=True)
-
-    usuario = relationship("Usuario", back_populates="cliente_representantes")
-    empresa = relationship("Empresa", back_populates="clientes_representantes")
 
 class Tipo_Orientador(Base):
     __tablename__ = "tipo_orientador"
