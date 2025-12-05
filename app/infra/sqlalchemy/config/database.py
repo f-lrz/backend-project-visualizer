@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.pool import NullPool
 from dotenv import load_dotenv
 import os
 
@@ -13,8 +14,9 @@ print(f"URL: {DATABASE_URL}")
 engine = create_engine(
     DATABASE_URL,
     echo=True,
-    pool_recycle=3600,
-    pool_pre_ping=True
+    #pool_recycle=3600,
+    #pool_pre_ping=True,
+    poolclass=NullPool
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
