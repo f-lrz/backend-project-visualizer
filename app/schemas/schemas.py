@@ -138,13 +138,13 @@ class ProjetoResponse(BaseModel):
 class ProjetoDashboardResponse(BaseModel):
     id_projeto: int
     nome_projeto: str
-    fase: Optional[str] = None # Fase (1 ou 2)
-    empresa_demandante: Optional[str] = None
+    fase: Optional[str] = None
     orientador_tecnico: Optional[str] = None
     aluno_lider: Optional[str] = None
     descricao: Optional[str] = None
     status: Optional[str] = None
-    semestre_inicial: Optional[str] = None # Format YYYY.S
+    semestre_inicial: Optional[str] = None
+    alunos: List[str] = []
 
     class Config:
         from_attributes = True
@@ -154,10 +154,11 @@ class ProjetoDashboardDetailsResponse(BaseModel):
     nome_projeto: str
     orientador_tecnico: Optional[str] = None
     empresa_demandante: Optional[str] = None
-    semestre_inicial: Optional[str] = None # Format YYYY.S
-    fase: Optional[str] = None # Fase (1 or 2)
+    semestre_inicial: Optional[str] = None
+    fase: Optional[str] = None
     descricao: Optional[str] = None
     status: Optional[str] = None
+    alunos: List[str] = []
 
     class Config:
         from_attributes = True

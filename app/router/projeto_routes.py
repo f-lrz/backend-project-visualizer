@@ -64,29 +64,14 @@ def listar_projetos(db: Session = Depends(get_db)):
     return repo.listar()
 
 
-@router.get("/{projeto_id}", response_model=schemas.ProjetoResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(role_required("adm"))])
+@router.get("/{projeto_id}", response_model=schemas.ProjetoDashboardDetailsResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(role_required("adm"))])
 def obter_projeto(projeto_id: int, db: Session = Depends(get_db)):
     repo = RepositorioProjeto(db)
-    projeto = repo.obter(projeto_id)
+    semestre_atual = get_current_semester()
+    projeto = repo.get_dashboard_details(projeto_id, semestre_atual)
     if not projeto:
         raise HTTPException(status_code=404, detail="Projeto não encontrado")
     return projeto
-
-
-@router.put("/{projeto_id}", response_model=schemas.ProjetoResponse, status_code=status.HTTP_200_OK, dependencies=[Depends(role_required("adm"))])
-def editar_projeto(projeto_id: int, projeto: schemas.ProjetoUpdate, db: Session = Depends(get_db)):
-    repo = RepositorioProjeto(db)
-    if not repo.obter(projeto_id):
-        raise HTTPException(status_code=404, detail="Projeto não encontrado")
-    return repo.editar(projeto_id, projeto)
-
-
-@router.delete("/{projeto_id}", dependencies=[Depends(role_required("adm"))])
-def remover_projeto(projeto_id: int, db: Session = Depends(get_db)):
-    repo = RepositorioProjeto(db)
-    if not repo.remover(projeto_id):
-        raise HTTPException(status_code=404, detail="Projeto não encontrado")
-    return {"mensagem": "Projeto removido com sucesso"}
 
 
 @router.get("/dashboard/all",
@@ -124,21 +109,3 @@ def get_projeto_dashboard_details(projeto_id: int, db: Session = Depends(get_db)
         raise HTTPException(status_code=404, detail="Projeto não encontrado")
         
     return detalhes
-
-@router.get("/{projeto_id}/dashboard-team", response_model=list[schemas.ProjetoDashboardMemberResponse], status_code=status.HTTP_200_OK, dependencies=[Depends(check_projeto_acesso)])
-def get_projeto_dashboard_team(projeto_id: int, db: Session = Depends(get_db)):
-    """
-    Retorna a lista de membros da equipe de um projeto no semestre atual
-    (Nome, Email, Curso, Feedback, Liderança).
-    Acesso permitido para ADM e alunos membros do projeto.
-    """
-    semestre_atual = get_current_semester()
-    repo = RepositorioProjeto(db)
-    equipe = repo.get_dashboard_team(projeto_id, semestre_atual)
-    
-    # Se o projeto existe (garantido pelo check_projeto_acesso)
-    # mas a equipe ainda não foi formada, retorna uma lista vazia.
-    if not equipe:
-        return []
-        
-    return equipe
