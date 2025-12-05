@@ -90,19 +90,6 @@ class RepositorioProjeto():
         month = now.month
         semestre_atual = int(f"{year}{1 if 1 <= month <= 6 else 2}")
 
-        # 2. Alias apenas para o Aluno Líder
-        AlunoLider = aliased(models.Usuario)
-
-        # 4. Subquery para buscar o Aluno Líder do semestre atual
-        sq_lider = select(
-            models.Lideranca.id_projeto,
-            AlunoLider.nome.label("aluno_lider")
-        ).join(
-            AlunoLider, models.Lideranca.id_usuario == AlunoLider.id_usuario
-        ).filter(
-            models.Lideranca.semestre == semestre_atual
-        ).distinct(models.Lideranca.id_projeto).subquery()
-
         # 5. Subquery para buscar a Fase do semestre atual
         sq_fase = select(
             models.Equipe_Projeto.id_projeto,
@@ -119,11 +106,7 @@ class RepositorioProjeto():
             models.Projeto.status,
             models.Projeto.data_ini,
             sq_fase.c.fase,
-            # models.Empresa.nome.label("empresa_demandante"), <--- REMOVIDO
-            models.Projeto.nome_orientador.label("orientador_tecnico"),
-            sq_lider.c.aluno_lider
-        ).outerjoin( 
-            sq_lider, models.Projeto.id_projeto == sq_lider.c.id_projeto
+            models.Projeto.nome_orientador.label("orientador_tecnico")
         ).outerjoin( 
             sq_fase, models.Projeto.id_projeto == sq_fase.c.id_projeto
         ).distinct(models.Projeto.id_projeto).all()
@@ -142,9 +125,7 @@ class RepositorioProjeto():
                 "descricao": row.descricao,
                 "status": row.status,
                 "fase": row.fase,
-                # "empresa_demandante": row.empresa_demandante, <--- REMOVIDO
                 "orientador_tecnico": row.orientador_tecnico,
-                "aluno_lider": row.aluno_lider,
                 "semestre_inicial": semestre_inicial_str
             })
 

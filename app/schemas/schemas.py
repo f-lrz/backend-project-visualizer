@@ -140,11 +140,9 @@ class ProjetoDashboardResponse(BaseModel):
     nome_projeto: str
     fase: Optional[str] = None
     orientador_tecnico: Optional[str] = None
-    aluno_lider: Optional[str] = None
     descricao: Optional[str] = None
     status: Optional[str] = None
     semestre_inicial: Optional[str] = None
-    alunos: List[str] = []
 
     class Config:
         from_attributes = True
